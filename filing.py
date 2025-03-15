@@ -1,34 +1,14 @@
-import os
 import re
-
-current_directory = os.path.dirname(__file__)  # Making sure the file is always created in the same folder with the program
-file_path = os.path.join(current_directory, 'User_data.txt')
-key_file_path= os.path.join(current_directory, 'key.txt')
-
-def list_to_strings(Plain_Text):
-  string_text=""
-  for line in Plain_Text:
-   string_text= string_text + line
-  return string_text
-
-def set_des_key():
-   with open(key_file_path, 'r') as file:
-    key_des = file.read()
-    return  key_des
-   
+import design
+import msg_security
 
 #-------------------------- Helper Functions Start ------------------------------------------
 
-def des_decrypt_message(Private_key,key_des):
-   return Private_key
 
-def hash_Password(Plain_Text):
-  hashed_password=Plain_Text
-  return hashed_password
 
 def get_file_data_string():
   try:
-    with open(file_path, 'r') as userFile:
+    with open(design.file_path, 'r') as userFile:
      string_data=userFile.read()
      string_data=string_data.split('\n')  #making an iteratable list wrt \n's
 
@@ -69,6 +49,7 @@ def extract_proper_key(keystring):                     # function to slice strin
         part1 = int(match.group(1))
         part2 = int(match.group(2))
         key_pair=[part1,part2]
+        print(key_pair)
         return key_pair
     else:
         raise ValueError("String format is incorrect")
@@ -81,7 +62,7 @@ def extract_proper_key(keystring):                     # function to slice strin
 def Check_In_File(Input_data):
   Entered_Username = Input_data[0]
   Entered_Password = Input_data[1]
-  Entered_Password=hash_Password(Entered_Password)
+  Entered_Password=msg_security.hash_data(Entered_Password)
   This_Account_Id="0"
 
 
@@ -154,10 +135,10 @@ def get_Private_key(Username):
         
         line = File_data[i]
         if("Username: " in line and Username in line):
-           line=File_data[i+5]
+           line=File_data[i+4]
            Private_key=line.replace("Private Key: ", "").strip() #Extract Private Key (hashed)
-           key_des=set_des_key()
-           Private_key=des_decrypt_message(Private_key,key_des)
+           key_des=msg_security.set_des_key()
+           Private_key=msg_security.decrypt_message(Private_key,key_des)
            Private_key=extract_proper_key(Private_key)
            return Private_key
         i=i+1
@@ -172,10 +153,10 @@ def get_Public_key(Username):
         
         line = File_data[i]
         if("Username: " in line and Username in line):
-           line=File_data[i+4]
+           line=File_data[i+3]
            Public_key=line.replace("Public Key: ", "").strip() #Extract Public Key (hashed)
-           key_des=set_des_key()
-           Public_key=des_decrypt_message(Public_key,key_des)
+           key_des=msg_security.set_des_key()
+           Public_key=msg_security.decrypt_message(Public_key,key_des)
            Public_key=extract_proper_key(Public_key)
            return Public_key
         i=i+1
@@ -184,7 +165,7 @@ def get_Public_key(Username):
 #-------------------------- Extract  Keys Procedures Ends ---------------------------
 
 def Update_Password(Username,new_password):
-     new_password=hash_Password(new_password)
+     new_password=msg_security.hash_data(new_password)
      File_data=get_file_data_string()
      i = 0
      while (i < len(File_data)):
@@ -213,12 +194,12 @@ def Update_Account_Data(line_number,new_data,file_data):
        
       file_data[line_number]=new_data
       try:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if design.already_exists(design.file_path):
+            design.remove_file(design.file_path)
         else:
             print("Erroring deleting file in updation")
         
-        with open(file_path, 'w') as file:
+        with open(design.file_path, 'w') as file:
             for line in file_data:
               file.write(line)
             print("Account Data updated Successfully")  
@@ -235,7 +216,7 @@ def check_old_password(Username,entered_password):
         if("Username: " in line and Username in line):
             line=File_data[i+1]
             old_password=line.replace("Password: ", "").strip()
-            entered_password=hash_Password(entered_password)
+            entered_password=msg_security.hash_data(entered_password)
             if(entered_password==old_password):
                 return 1
             else:
