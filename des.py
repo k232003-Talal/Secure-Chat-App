@@ -249,10 +249,25 @@ def des_decrypt_message(ciphertext, decryption_key):
     return decrypted_text
 
 def main():
-    encrypted_text = des_encrypt_message("Amount: 75000", "12345678")
+    encrypted_text = des_encrypt_message("(867, 4399)", "0123456789abcdef")
     print(f"Encrypted Text: {encrypted_text}")
-    decrypted_text = des_decrypt_message(encrypted_text, "12345678")
-    print(f"Decrypted Text: {decrypted_text}")
+    decrypted_text = des_decrypt_message(encrypted_text, "0123456789abcdef")
+    print(f"Decrypted Text: {decrypted_text}\n")
+
+    encrypted_text = des_encrypt_message("(3123, 4399)", "0123456789abcdef")
+    print(f"Encrypted Text: {encrypted_text}")
+    decrypted_text = des_decrypt_message(encrypted_text, "0123456789abcdef")
+    print(f"Decrypted Text: {decrypted_text}\n")
+
+    encrypted_text = des_encrypt_message("(103, 201)", "0123456789abcdef")
+    print(f"Encrypted Text: {encrypted_text}")
+    decrypted_text = des_decrypt_message(encrypted_text, "0123456789abcdef")
+    print(f"Decrypted Text: {decrypted_text}\n")
+
+    encrypted_text = des_encrypt_message("(91, 201)", "0123456789abcdef")
+    print(f"Encrypted Text: {encrypted_text}")
+    decrypted_text = des_decrypt_message(encrypted_text, "0123456789abcdef")
+    print(f"Decrypted Text: {decrypted_text}\n")
     
 
 if __name__ == "__main__":

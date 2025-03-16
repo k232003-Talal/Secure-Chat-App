@@ -88,13 +88,13 @@ def decrypt(private_key, ciphertext):
 # Example usage
 def main():
     # Generate public and private keys
-    public_key, private_key = generate_keypair(PRIMES_LIST)
+    public_key,private_key =generate_keypair()
     
     print("Public key:", public_key)
     print("Private key:", private_key)
     
     # Message to encrypt
-    message = "Hello, RSA Encryption!"
+    message = "Hello world"
     print("\nOriginal message:", message)
     
     # Encrypt the message

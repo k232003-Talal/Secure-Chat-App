@@ -13,7 +13,7 @@ Other_Headings_font= ("Arial Black", 30, "bold")
 Simple_text_font= ("Arial", 15, "bold")
 Button_font1=("Arial Black", 20, "bold")
 Button_font2=("Arial Black", 15, "bold")
-Entry_label_font=("Arial", 15)
+Entry_label_font=("Arial", 14)
 Data_Display_font=("Arial", 10,"bold")
 Other_labels_font=("Arial", 15, "bold")
 
@@ -21,6 +21,14 @@ Basic_Button_style = {
     "fg": "white",
     "relief": "raised",
     "borderwidth": 10,
+    "activebackground":"white",  # Hover background color
+    "activeforeground":"black"  # Hover text color
+}
+
+Simple_Button_style = {
+    "fg": "white",
+    "relief": "raised",
+    "borderwidth": 5,
     "activebackground":"white",  # Hover background color
     "activeforeground":"black"  # Hover text color
 }
@@ -42,14 +50,25 @@ Button_style_3 = {
     "width": 20,
     "height": 2,
 }
+
+Button_style_4 = {
+    "font": Entry_label_font,
+    "width": 4,
+    "height": 1,
+}
+
 #styles END ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 
 #OS configuration ---------------------------------------------------------------------------------------------------------------------------------------
 
 current_directory = os.path.dirname(__file__)  # Making sure the file is always created in the same folder with the program
-file_path = os.path.join(current_directory, 'User_data.txt')
+data_file_path = os.path.join(current_directory, 'User_data.txt')
 key_file_path= os.path.join(current_directory, 'key.txt')
+chat_logs_file_path=os.path.join(current_directory, 'chat_logs.txt')
 
 def remove_file(path):
    os.remove(path)

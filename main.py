@@ -1,7 +1,8 @@
 import tkinter
 import time
-from filing import *
 import design
+import chat
+from filing import *
 from ip_updator import get_machines_public_ip
 
 def go_back(this_window):
@@ -10,6 +11,12 @@ def go_back(this_window):
 def Log_out(Account_Window):
     Account_Window.destroy()
     Login_Function()     
+
+
+    """ 
+        Read the message in the Chat.py before running. 
+        the password for both, Talal and Dani is test1234 
+    """
 
 #PASSWORD ----------------------------------------------------------------------------------------------------
 
@@ -71,6 +78,7 @@ def Change_Password(This_username):
 
 #------------------------------------------- Change_Password Functions END -------------------------------------------
 
+
 def Validate_login_data(login_data):
     Account_Id=Check_In_File(login_data)      #function found in filing_logic.py it returns an id if account is found in file, otherwise returns "0"
     Result=[None,0]   #if account is found, we need the id, else we need to print an error, index 0 is error, index 1 is id
@@ -113,10 +121,24 @@ def Validate_Passwod_data(Entered_data,This_username):
 
     else:
         return ""
-    
-# #AUX ----------------------------------------------------------------------------------------------------
 
 
+# Functions to remove or Add Placeholder text --------------------------------------------------
+def on_focus_in(event, entry, placeholder_text):
+    if entry.get() == placeholder_text:
+        entry.delete(0, tkinter.END)  # Remove the placeholder text
+        entry.config(fg="black")  # Change text color to black when typing
+        if(placeholder_text=="Password" or placeholder_text=="Confirm Password"):
+            entry.config(show="*")  #if user is entering a password, show * instead of actual letters
+
+
+def on_focus_out(event, entry, placeholder_text):
+    if entry.get() == "":
+        entry.insert(0, placeholder_text)
+        entry.config(fg="gray")  # Placeholder text color set back to gray
+        if(placeholder_text=="Password" or placeholder_text=="Confirm Password"):
+            entry.config(show="") # (in case of password) when nothing in field, show the placeholder instead of '*' 
+#----------------------------------------------------------------------------------------------------
 
 # #USER ACC --------------------------------------------------------------------------------------------------------
 
@@ -138,7 +160,7 @@ def Show_User_Account(Acount_Id):
     user_frame=tkinter.LabelFrame(User_Account_Window,bg="black",  relief="flat") #relief="flat" sets visible boderwidth to 0
     user_frame.grid(row=1,column=0 ,padx=20,pady=10)
 
-    Chat_button = tkinter.Button(user_frame, bg="#15aacb" , text="Chat", **design.Button_style_2,**design.Basic_Button_style)
+    Chat_button = tkinter.Button(user_frame, bg="#15aacb" , text="Chat",command=lambda: chat.Start_Chat(Username), **design.Button_style_2,**design.Basic_Button_style)
     Chat_button.grid(row=1,column=0,padx=25,pady=(20,10)) 
 
 
@@ -162,24 +184,6 @@ def Show_User_Account(Acount_Id):
              print("Ip updated Successfully")
              Update_IP_button.config(bg="#13780a")  # Change back after 1 second
 
-
-
-# Functions to remove or Add Placeholder text --------------------------------------------------
-def on_focus_in(event, entry, placeholder_text):
-    if entry.get() == placeholder_text:
-        entry.delete(0, tkinter.END)  # Remove the placeholder text
-        entry.config(fg="black")  # Change text color to black when typing
-        if(placeholder_text=="Password" or placeholder_text=="Confirm Password"):
-            entry.config(show="*")  #if user is entering a password, show * instead of actual letters
-
-
-def on_focus_out(event, entry, placeholder_text):
-    if entry.get() == "":
-        entry.insert(0, placeholder_text)
-        entry.config(fg="gray")  # Placeholder text color set back to gray
-        if(placeholder_text=="Password" or placeholder_text=="Confirm Password"):
-            entry.config(show="") # (in case of password) when nothing in field, show the placeholder instead of '*' 
-#----------------------------------------------------------------------------------------------------
 
 #LOGIN ---------------------------------------------------------------------------
 
@@ -244,7 +248,6 @@ def Login_Function():
 
    login_Window.mainloop()
 # -----------------------------------------------------------------------------------------------------------------------------------
-
 
 
 Login_Function()
