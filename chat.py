@@ -59,8 +59,8 @@ def load_text(text_widget):
             text_widget.see(tkinter.END)
             text_widget.config(state="disabled") #this makes widget read only (so that user cant directly edit the widget on screen)
 
-
-        text_widget.after(1000, lambda: load_text(text_widget)) #call this function again every second to check for any new messages
+        if text_widget.winfo_exists():
+           text_widget.after(1000, lambda: load_text(text_widget)) #call this function again every second to check for any new messages
 
 
 def send_msg_to_other_user(msg,My_username):
@@ -72,6 +72,9 @@ def send_msg(msg,Username):
     append_msg_chat(msg,Username)
     send_msg_to_other_user(msg,Username)        
     print("message Sent successfully")
+
+def go_back(window):
+    window.destroy()    
 
 
 def Start_Chat(Username):
@@ -100,8 +103,8 @@ def Start_Chat(Username):
     #  the calculation below is To centre the window that appears on the screen
     screen_width = Chat_window.winfo_screenwidth()       
     screen_height = Chat_window.winfo_screenheight()     
-    window_width = 1120                                  
-    window_height = 740                                        
+    window_width = 1160                                  
+    window_height = 760                                        
     X_cord = (screen_width // 2) - (window_width // 2)   
     Y_cord = (screen_height // 2) - (window_height // 2)  
     Chat_window.geometry(f"{window_width}x{window_height}+{X_cord}+{Y_cord}") 
@@ -117,7 +120,7 @@ def Start_Chat(Username):
     highlight_Users(text_widget)
 
     scrollbar = tkinter.Scrollbar(Chat_frame, command=text_widget.yview)
-    scrollbar.grid(row=0,column=1, ipadx=5, sticky="ns")      #sticky="ns" is streching scrollbar vertically
+    scrollbar.grid(row=0,column=1, ipadx=7, sticky="ns")      #sticky="ns" is streching scrollbar vertically
     load_text(text_widget)
     text_widget.config(yscrollcommand=scrollbar.set) 
 
@@ -139,13 +142,16 @@ def Start_Chat(Username):
             send_msg(Entered_msg,Username)
             msg_entry.delete("1.0", "end")
 
-    Send_button = tkinter.Button(Chat_frame, bg="black" , text="Send" ,command=send_button_function, **design.Button_style_4,**design.Simple_Button_style)
-    Send_button.grid(row=1,column=1,padx=10,pady=(20,10))
+    button_frame=tkinter.Frame(Chat_frame) 
+    button_frame.grid(row=1,column=1 ,padx=20,pady=10) 
+
+    Send_button = tkinter.Button(button_frame, bg="black" , text="Send" ,command=send_button_function, **design.Button_style_4,**design.Simple_Button_style)
+    Send_button.grid(row=1,column=0,padx=10,pady=(20,10))
+
+    Close_button = tkinter.Button(button_frame, bg="red" , text="Close" ,command=lambda: go_back(Chat_window), **design.Button_style_4,**design.Simple_Button_style)
+    Close_button.grid(row=2,column=0,padx=10,pady=(20,10))
 
     Chat_window.mainloop()
-
-
-
 
 """ temporary function to demonstrate new messages """
 
@@ -157,4 +163,4 @@ def recv_msg_from_other_user(msg,My_username):
         append_msg_chat(decrypted_msg,other_user)
 
 
-# Start_Chat("Talal")      
+Start_Chat("Talal")      
