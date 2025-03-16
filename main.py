@@ -2,8 +2,8 @@ import tkinter
 import time
 import design
 import chat
-from filing import *
-from ip_updator import get_machines_public_ip
+import ip_updator
+import filing
 
 def go_back(this_window):
     this_window.destroy()
@@ -71,7 +71,7 @@ def Change_Password(This_username):
         if(error_text=="" or error_text==None):
             Change_Password_window.destroy()
             print("Password Change Successful")
-            Update_Password(This_username,Entered_data[1]) 
+            filing.Update_Password(This_username,Entered_data[1]) 
 
     Submit_Data_button = tkinter.Button(Button_Frame, bg="#13780a" , text="Submit\nData",command=Submit_Change_Passwod_data, **design.Button_style_2,**design.Basic_Button_style)
     Submit_Data_button.grid(row=5,column=1,padx=20,pady=(20,10)) 
@@ -80,7 +80,7 @@ def Change_Password(This_username):
 
 
 def Validate_login_data(login_data):
-    Account_Id=Check_In_File(login_data)      #function found in filing_logic.py it returns an id if account is found in file, otherwise returns "0"
+    Account_Id=filing.Check_In_File(login_data)      #function found in filing_logic.py it returns an id if account is found in file, otherwise returns "0"
     Result=[None,0]   #if account is found, we need the id, else we need to print an error, index 0 is error, index 1 is id
     if(Account_Id=="0"):
        Result[0]="Username or Password Is incorrect."
@@ -112,7 +112,7 @@ def Validate_Passwod_data(Entered_data,This_username):
 
     NewPasswordError= Validade_new_Password()
     if(NewPasswordError == None):
-       Old_Password_check=check_old_password(This_username,Old_Password)
+       Old_Password_check=filing.check_old_password(This_username,Old_Password)
        if(Old_Password_check!=1):
            return "Invalid Password."
        
@@ -150,7 +150,7 @@ def Show_User_Account(Acount_Id):
     User_Account_Window.geometry(f"465x475+{design.X_cord}+{design.Y_cord}")  
     User_Account_Window.config(bg="black")
 
-    Username=get_Username(Acount_Id)
+    Username=filing.get_Username(Acount_Id)
 
 
 #User_Account Label
@@ -173,14 +173,16 @@ def Show_User_Account(Acount_Id):
     Log_out_button = tkinter.Button(user_frame, bg="#901111", text="Log out",command=lambda: Log_out(User_Account_Window),**design.Button_style_2,**design.Basic_Button_style)
     Log_out_button.grid(row=2,column=1,padx=20,pady=(20,10)) 
 
-    def Update_IP(This_username):
-        updated_IP=get_machines_public_ip()
+    def Update_IP(This_username):  #this will come in handy when existing public ip expires or when we run code on a new device
+        updated_IP=ip_updator.get_machines_public_ip()
         if(updated_IP is None):
              print("unable to fetch Ip")
         else:     
-             Update_IP_button.config(bg="#ffffff")  # Change color to white
-             Update_IP_address(This_username,updated_IP)
-             time.sleep(1) 
+             Update_IP_button.config(bg="#ffffff")  # Change color to white (for visual purposes)
+             ip_updator.download_from_firebase()     #first get the data from firebase, (to get the updated ip of other user)
+             filing.Update_IP_address(This_username,updated_IP) #update this users ip
+             ip_updator.upload_to_firebase()            #upload your updated ip to the databse so that other user can access it.
+             time.sleep(0.5)
              print("Ip updated Successfully")
              Update_IP_button.config(bg="#13780a")  # Change back after 1 second
 

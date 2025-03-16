@@ -4,7 +4,7 @@ import time
 import threading
 import os
 import msg_security
-from filing import get_txt_file_data,append_msg_chat,get_other_Username
+import filing
 
 
 last_modified_time=None #represents the last time the chatlogs were modified, used to handle new messages being displyaed
@@ -39,18 +39,20 @@ def highlight_Users(text_widget):
             start = end  # Move past the current match
     text_widget.tag_configure("highlight", foreground="red")
 
-
+def go_back(window):
+    window.withdraw() #hide the window
+    window.after(1000, window.destroy) #wait for the loadtext_function to stop, destroy after 1 sec
 
 #called if a new message is sent by either users, to reload the text on screen. 
 def load_text(text_widget):
         
         global last_modified_time
-
+        
         current_modified_time = os.stat(design.chat_logs_file_path).st_mtime        #if txt file has been modified, that means new msg has arrived.
         if last_modified_time is None or current_modified_time > last_modified_time:
             last_modified_time = current_modified_time
             
-            txt_data=get_txt_file_data(design.chat_logs_file_path)
+            txt_data=filing.get_txt_file_data(design.chat_logs_file_path)
         
             text_widget.config(state="normal")  #enabling writing in the text widget temporarily
             text_widget.delete("1.0", tkinter.END)  # Clear old text
@@ -59,8 +61,9 @@ def load_text(text_widget):
             text_widget.see(tkinter.END)
             text_widget.config(state="disabled") #this makes widget read only (so that user cant directly edit the widget on screen)
 
-        if text_widget.winfo_exists():
-           text_widget.after(1000, lambda: load_text(text_widget)) #call this function again every second to check for any new messages
+        chat_window = text_widget.winfo_toplevel()
+        if chat_window.state() != "withdrawn":
+           text_widget.after(1000, lambda: load_text(text_widget)) # call this function again every second to check for any new messages
 
 
 def send_msg_to_other_user(msg,My_username):
@@ -69,13 +72,9 @@ def send_msg_to_other_user(msg,My_username):
     
 
 def send_msg(msg,Username):
-    append_msg_chat(msg,Username)
+    filing.append_msg_chat(msg,Username)
     send_msg_to_other_user(msg,Username)        
     print("message Sent successfully")
-
-def go_back(window):
-    window.destroy()    
-
 
 def Start_Chat(Username):
 
@@ -85,7 +84,7 @@ def Start_Chat(Username):
 
     logic: The line below works with the temporary 'recv_msg_from_other_user' function. simulates how the chat function will run concurrently with recieve msg function. It is not part of the final logic
 
-        -) the recieve function simulates new msgs by constantly appending "lmaooooo" or ":y'dddddd" (depending on why you login as) to the chat every 4 seconds
+        -) the recieve function simulates new msgs by constantly appending "lmaooooo" or ":y'dddddd" (depending on why you login as) to the chat every 8 seconds
           
         -)   the loadtext function in the 'start_chat' function runs every second to check any new msgs
 
@@ -157,10 +156,9 @@ def Start_Chat(Username):
 
 def recv_msg_from_other_user(msg,My_username):
     while True:
-        time.sleep(4)
+        time.sleep(8)
         decrypted_msg=msg_security.RSA_decrypt(msg,My_username)
-        other_user=get_other_Username(My_username)
-        append_msg_chat(decrypted_msg,other_user)
+        other_user=filing.get_other_Username(My_username)
+        filing.append_msg_chat(decrypted_msg,other_user)
 
-
-Start_Chat("Talal")      
+# Start_Chat("Talal")      

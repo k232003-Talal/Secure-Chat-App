@@ -215,7 +215,6 @@ def Update_Account_Data(line_number,new_data,file_data):
         with open(design.data_file_path, 'w') as file:
             for line in file_data:
               file.write(line)
-            print("Account Data updated Successfully")  
     
       except Exception as e:
         print(f"An error occurred: {e}")

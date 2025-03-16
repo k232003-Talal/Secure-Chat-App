@@ -69,6 +69,7 @@ current_directory = os.path.dirname(__file__)  # Making sure the file is always 
 data_file_path = os.path.join(current_directory, 'User_data.txt')
 key_file_path= os.path.join(current_directory, 'key.txt')
 chat_logs_file_path=os.path.join(current_directory, 'chat_logs.txt')
+database_json_file_path=os.path.join(current_directory, 'cn-project-f9b34-firebase-adminsdk-fbsvc-b6f503d8cd.json')
 
 def remove_file(path):
    os.remove(path)
