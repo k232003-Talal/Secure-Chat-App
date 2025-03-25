@@ -2,18 +2,15 @@
 
 #pip install requests
 # pip install firebase-admin
-import requests
+import socket
 import design
 import firebase_admin
 from firebase_admin import credentials, db
 
-def get_machines_public_ip():
-    response = requests.get('https://api.ipify.org?format=json')
-    if response.status_code == 200:
-        ip = response.json()['ip']
-        return ip
-    else:
-        return None
+def get_machines_private_ip():
+     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        s.connect(("8.8.8.8", 80))  # Google DNS (does not send actual data)
+        return s.getsockname()[0]
 
 #Connecting the script to firebase database
 cred = credentials.Certificate(design.database_json_file_path) 
@@ -38,5 +35,5 @@ def upload_to_firebase():
 
 # upload_to_firebase()
 # download_from_firebase()
-# ip = get_machines_public_ip()
+# ip = get_machines_private_ip()
 # print("public IP address:",ip)

@@ -174,7 +174,7 @@ def Show_User_Account(Acount_Id):
     Log_out_button.grid(row=2,column=1,padx=20,pady=(20,10)) 
 
     def Update_IP(This_username):  #this will come in handy when existing public ip expires or when we run code on a new device
-        updated_IP=ip_updator.get_machines_public_ip()
+        updated_IP=ip_updator.get_machines_private_ip()
         if(updated_IP is None):
              print("unable to fetch Ip")
         else:     
