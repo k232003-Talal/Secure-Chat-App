@@ -97,20 +97,7 @@ def Check_In_File(Input_data):
 
 
 #-------------------------- Get Account Details Procedure STARTS ---------------------------
-def get_IP(Acount_Id):
 
-    File_data=get_file_data_string(design.data_file_path)
-    i = 0
-    while (i < len(File_data)):
-        
-        line = File_data[i]
-        if("Account ID:" in line and Acount_Id in line):
-           line=File_data[i+3]
-           IP_address=line.replace("Ip_address: ", "").strip() #Extract IP 
-           break
-
-        i=i+1
-    return IP_address
 
 def get_Username(Acount_Id):
 

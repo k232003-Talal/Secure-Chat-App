@@ -2,7 +2,7 @@ import design
 import des
 import rsa
 import sha1
-from filing import get_Private_key,get_Public_key,get_other_Username
+import filing
 
 #DES (for chat encrption)------------------------------------------------------------------------------------------------------------------- 
 
@@ -30,13 +30,13 @@ def hash_data(Plain_Text):
 #RSA (for msgs sent over sockets) ------------------------------------------------------------------------------------------------------------------- 
 
 def RSA_encrypt(plaintext,My_username):
-   reciever=get_other_Username(My_username)
-   public_key=get_Public_key(reciever)
+   reciever=filing.get_other_Username(My_username)
+   public_key=filing.get_Public_key(reciever)
    encrypted_msg=rsa.encrypt(public_key, plaintext)
    return encrypted_msg
 
 
 def RSA_decrypt(cipher_text,My_username):
-   Private_key=get_Private_key(My_username)
+   Private_key=filing.get_Private_key(My_username)
    decrypted_msg=rsa.decrypt(Private_key, cipher_text)
    return decrypted_msg

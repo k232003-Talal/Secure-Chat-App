@@ -5,6 +5,7 @@ import threading
 import os
 import msg_security
 import filing
+import sockcli
 
 
 last_modified_time=None #represents the last time the chatlogs were modified, used to handle new messages being displyaed
@@ -66,18 +67,19 @@ def load_text(text_widget):
            text_widget.after(1000, lambda: load_text(text_widget)) # call this function again every second to check for any new messages
 
 
-def send_msg_to_other_user(msg,My_username):
+def send_msg_to_other_user(chat_obj,msg,My_username):
     encrypted_msg=msg_security.RSA_encrypt(msg,My_username)
-    #sockets function called here. 
+    chat_obj.send_message(encrypted_msg)  
     
 
-def send_msg(msg,Username):
+def send_msg(chat_obj,msg,Username):
     filing.append_msg_chat(msg,Username)
-    send_msg_to_other_user(msg,Username)        
+    send_msg_to_other_user(chat_obj,msg,Username)        
     print("message Sent successfully")
 
 def Start_Chat(Username):
 
+    chat_socket_obj=sockcli.start_chat_sockets(Username)  
 
     """ 
     replace the line below with the ACTUAL thread that recieves msg
@@ -93,8 +95,6 @@ def Start_Chat(Username):
         -)  if you send a msg, that also updates on screen.
 
     """
-
-    threading.Thread(target=recv_msg_from_other_user,args=([2350, 3637, 1137, 2098, 2098, 2098, 2098, 2098],Username,), daemon=True).start()  #daemon=True makes threads stop when program halts
 
     Chat_window = tkinter.Tk()
     Chat_window.title("End to End Ecrypted Chat") 
@@ -138,7 +138,7 @@ def Start_Chat(Username):
             print(("Msg too big to send."))
             return
         else:
-            send_msg(Entered_msg,Username)
+            send_msg(chat_socket_obj,Entered_msg,Username)
             msg_entry.delete("1.0", "end")
 
     button_frame=tkinter.Frame(Chat_frame) 
@@ -154,11 +154,5 @@ def Start_Chat(Username):
 
 """ temporary function to demonstrate new messages """
 
-def recv_msg_from_other_user(msg,My_username):
-    while True:
-        time.sleep(8)
-        decrypted_msg=msg_security.RSA_decrypt(msg,My_username)
-        other_user=filing.get_other_Username(My_username)
-        filing.append_msg_chat(decrypted_msg,other_user)
 
-# Start_Chat("Talal")      
+Start_Chat("Talal")      
