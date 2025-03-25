@@ -148,6 +148,21 @@ def get_Private_key(Username):
         i=i+1
     return ""    
 
+def get_User_ip(Username):
+    
+    user_ip=""
+    File_data=get_file_data_string(design.data_file_path)
+    i = 0
+    while (i < len(File_data)):
+        
+        line = File_data[i]
+        if("Username: " in line and Username in line):
+           line=File_data[i+2]
+           user_ip=line.replace("IP_address: ", "").strip() #Extract ip
+           return user_ip
+        i=i+1
+    return "" 
+
 def get_Public_key(Username):
     
     Public_key=""
