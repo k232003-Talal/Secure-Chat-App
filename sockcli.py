@@ -1,10 +1,15 @@
 import socket
 import threading
 import filing
-import time
 import pickle
 import queue
 import msg_security
+
+""" The ChatApplication class manages two primary sockets: a listener socket for receiving messages and a sender socket for sending messages to a target IP.
+    When a user starts listening, it binds the listener socket to the specified host and port, then spawns a separate thread to listen for incoming connections. 
+    For outgoing communication, it places messages in a queue, which are processed by another thread to ensure messages are sent asynchronously. When connected,
+    messages are serialized with pickle, encrypted with RSA (through msg_security), and sent to the target. If a connection is lost or the chat window is closed,
+     the sockets are properly shut down, and the chat window is terminated. """
 
 class ChatApplication:
     def __init__(self, host='0.0.0.0', port=5555, chat_window=None):
@@ -22,7 +27,7 @@ class ChatApplication:
         self.sending_thread.start()
 
     def close_chat_window(self):
-        print("Closing sockets and chat window...")
+        print("Connection terminated. Chat closed.\n ----------------------------------> Ignore the error(s) below. The error occurs because the chat widget is being updated by the scheduler while it is being closed.\n ----------------------------------> Once the chat is reopened, the updates will proceed normally.")
 
         try:
             if self.client_socket:
@@ -36,6 +41,7 @@ class ChatApplication:
 
         if self.chat_window:
             self.chat_window.after(0, self.chat_window.destroy)
+   
 
     def start_listening(self, my_username):
         if self.listening:

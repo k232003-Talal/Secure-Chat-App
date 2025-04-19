@@ -1,7 +1,5 @@
 import tkinter
 import design
-import time
-import threading
 import os
 import msg_security
 import filing
@@ -40,14 +38,22 @@ def go_back(window):
             widget.after_cancel(widget.after_id)
     window.withdraw()
     try:
-       window.after(1000, window.destroy)
+       window.after(1000, lambda: window.destroy() if window.winfo_exists() else None)
     except:
         pass    #window already destroyed   
+    
+    """ the load_text function below employs periodic updates to the chat window through the after() method of tkinter. This method schedules a callback function
+        to be executed after a delay (1000 milliseconds in this case). Each time the callback is triggered, load_text() checks if the chat log file has been modified
+        by comparing its last modified timestamp with a stored value (last_modified_time). If changes are detected, it reloads the chat data from the file, updates the chat widget,
+        and highlights relevant usernames. This cycle continues as long as the chat window is open, with the next update scheduled after 1 second, ensuring that the chat window 
+        stays up-to-date with new messages without manually refreshing. """
 
 def load_text(text_widget,my_username,first_time=False):
     global last_modified_time
 
-    if first_time==True:
+#if its the first time calling this function. load text without relying on the scheduller. this ensure that if chat is closed and opened again. msgs are displayed without the need to modify the file first.
+
+    if first_time==True: 
         first_time=False
         txt_data = filing.get_txt_file_data(design.chat_logs_file_path)
         text_widget.config(state="normal")
@@ -57,6 +63,7 @@ def load_text(text_widget,my_username,first_time=False):
         text_widget.see(tkinter.END)
         text_widget.config(state="disabled")
 
+#if file modified. only then update the chat
 
     current_modified_time = os.stat(design.chat_logs_file_path).st_mtime
     if last_modified_time is None or current_modified_time > last_modified_time:
@@ -70,9 +77,17 @@ def load_text(text_widget,my_username,first_time=False):
         text_widget.config(state="disabled")
 
     try:
-        text_widget.after(1000, lambda: load_text(text_widget,my_username))
-    except:
-        pass    #window destroyed so no need to update again  
+        # Cancel any previous scheduled call first
+        if hasattr(text_widget, "after_id"):
+            text_widget.after_cancel(text_widget.after_id)
+    except Exception:
+        pass
+
+    try:
+        # Store the ID of the new scheduled call
+        text_widget.after_id = text_widget.after(1000, lambda: load_text(text_widget, my_username))
+    except Exception:
+        pass
 
 
 def send_msg_to_other_user(chat_obj, msg, My_username):
@@ -147,6 +162,12 @@ def Start_Chat(Username):
     Close_button.grid(row=2, column=0, padx=10, pady=(20, 10))
 
     chat_socket_obj = sockcli.start_chat_sockets(Username, Chat_window)
-    Chat_window.protocol("WM_DELETE_WINDOW", close_chat)
+
+    """The chat_obj returned by the sockcli.start_chat_sockets() function is an instance of the ChatApplication class, which is responsible for managing the connection,
+      sending and receiving messages. It handles socket connections using self.listener_socket for listening and self.sender_socket for sending messages. 
+      The ChatApplication object manages the connection to the target user by calling methods like connect_to_target() and send_message() to securely transmit data,
+        and it uses the message_queue for asynchronous message handling via a separate thread (sending_thread)."""
+    
+    Chat_window.protocol("WM_DELETE_WINDOW", close_chat) #if the red cross button on the top right is clicked, behave the same way as when the custom  clase button is clicked
 
     Chat_window.mainloop()

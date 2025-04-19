@@ -2,7 +2,7 @@ import tkinter
 import time
 import design
 import chat
-import ip_updator
+import database_updator
 import filing
 
 def go_back(this_window):
@@ -70,8 +70,8 @@ def Change_Password(This_username):
         Error_label.config(text=error_text)   #if there is an error, display it
         if(error_text=="" or error_text==None):
             Change_Password_window.destroy()
-            print("Password Change Successful")
             filing.Update_Password(This_username,Entered_data[1]) 
+            print("Password Change Successful")
 
     Submit_Data_button = tkinter.Button(Button_Frame, bg="#13780a" , text="Submit\nData",command=Submit_Change_Passwod_data, **design.Button_style_2,**design.Basic_Button_style)
     Submit_Data_button.grid(row=5,column=1,padx=20,pady=(20,10)) 
@@ -174,14 +174,12 @@ def Show_User_Account(Acount_Id):
     Log_out_button.grid(row=2,column=1,padx=20,pady=(20,10)) 
 
     def Update_IP(This_username):  #this will come in handy when existing public ip expires or when we run code on a new device
-        updated_IP=ip_updator.get_machines_private_ip()
+        updated_IP=database_updator.get_machines_public_ip()
         if(updated_IP is None):
              print("unable to fetch Ip")
         else:     
              Update_IP_button.config(bg="#ffffff")  # Change color to white (for visual purposes)
-             ip_updator.download_from_firebase()     #first get the data from firebase, (to get the updated ip of other user)
              filing.Update_IP_address(This_username,updated_IP) #update this users ip
-             ip_updator.upload_to_firebase()            #upload your updated ip to the databse so that other user can access it.
              time.sleep(0.5)
              print("Ip updated Successfully")
              Update_IP_button.config(bg="#13780a")  # Change back after 1 second
