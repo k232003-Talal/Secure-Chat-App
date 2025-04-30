@@ -1,6 +1,7 @@
 import re
 import design
 import msg_security
+import database_updator
 
 #-------------------------- Helper Functions Start ------------------------------------------
 
@@ -205,14 +206,17 @@ def Update_IP_address(Username,new_IP_address):
         i=i+1        
 
 
+
 def Update_Account_Data(line_number,new_data,file_data):
-       
+      
+      database_updator.download_from_firebase()  #first get the data from firebase,
+
       file_data[line_number]=new_data
       try:
         if design.already_exists(design.data_file_path):
             design.remove_file(design.data_file_path)
         else:
-            print("Erroring deleting file in updation")
+            print("Error updating User data")
         
         with open(design.data_file_path, 'w') as file:
             for line in file_data:
@@ -220,6 +224,8 @@ def Update_Account_Data(line_number,new_data,file_data):
     
       except Exception as e:
         print(f"An error occurred: {e}")
+
+      database_updator.upload_to_firebase()      #upload your updated data to the databse so it can be accessed later.   
 
 
 def check_old_password(Username,entered_password):

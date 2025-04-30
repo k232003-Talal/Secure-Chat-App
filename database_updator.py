@@ -1,5 +1,8 @@
-#our public ips can change dynamically after a few days, OR if we use the account on a different device
+""" our public ips can change dynamically after a few days,
+    OR if we use the account on a different device. 
+    so we can use a database to keep track of/ update our ips """
 
+#in case you havent: 
 #pip install requests
 # pip install firebase-admin
 import socket
@@ -7,7 +10,7 @@ import design
 import firebase_admin
 from firebase_admin import credentials, db
 
-def get_machines_private_ip():
+def get_machines_public_ip():
      with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         s.connect(("8.8.8.8", 80))  # Google DNS (does not send actual data)
         return s.getsockname()[0]
@@ -29,11 +32,5 @@ def upload_to_firebase():
     with open(design.data_file_path, "r") as file:
         data = file.read()
 
-    ref = db.reference("user-info")  # Change to Firestore method if using Firestore
+    ref = db.reference("user-info") 
     ref.set(data)
-    print("Database Updated")
-
-# upload_to_firebase()
-# download_from_firebase()
-# ip = get_machines_private_ip()
-# print("public IP address:",ip)
