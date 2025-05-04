@@ -111,7 +111,14 @@ project/
 
 ## Installation Notes
 
-Ensure the following packages are installed:
+Replace the local database URL with Your database URL in database_updator.py
+Place your database credentials file in the same directory.
+Also change the database credentials filepath (design.py).
+You will also find these instructions in database_updator.py.
+
+Also Ensure the following packages are installed:
 
 ```bash
-pip install requests firebase-admin
+pip install firebase-admin
+pip install sympy
+pip install requests

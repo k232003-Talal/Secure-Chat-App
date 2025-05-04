@@ -225,7 +225,7 @@ def Update_Account_Data(line_number,new_data,file_data):
       except Exception as e:
         print(f"An error occurred: {e}")
 
-      database_updator.upload_to_firebase()      #upload your updated data to the databse so it can be accessed later.   
+      database_updator.upload_to_firebase()      #upload your data to the databse so it can be accessed later.   
 
 
 def check_old_password(Username,entered_password):

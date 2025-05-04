@@ -1,7 +1,5 @@
-#pip install sympy (install if you havent already)
 import math
 import random
-
 from sympy import primerange
 
 PRIMES_LIST : list = list(primerange(100))

@@ -2,9 +2,7 @@
     OR if we use the account on a different device. 
     so we can use a database to keep track of/ update our ips """
 
-#in case you havent: 
-#pip install requests
-# pip install firebase-admin
+
 import socket
 import design
 import firebase_admin
@@ -15,9 +13,9 @@ def get_machines_public_ip():
         s.connect(("8.8.8.8", 80))  # Google DNS (does not send actual data)
         return s.getsockname()[0]
 
-#Connecting the script to firebase database
-cred = credentials.Certificate(design.database_json_file_path) 
-firebase_admin.initialize_app(cred, {'databaseURL': 'https://cn-project-f9b34-default-rtdb.firebaseio.com/'})
+
+cred = credentials.Certificate(design.database_json_file_path)            #REPLACE THIS WITH THE PATH TO YOUR CREDENTAILS CERTIFICATE (change in design.py)
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://cn-project-f9b34-default-rtdb.firebaseio.com/'}) #REPLACE THIS WITH YOUR FIREBASE DATABASE URL
 
 
 def download_from_firebase():

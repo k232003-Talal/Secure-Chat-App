@@ -1,5 +1,4 @@
-#this file contains declarations of design and utilites variables/function
-
+"""this file contains declarations of design and utilites variables/function"""
 
 import os
 #styles ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -29,8 +28,8 @@ Simple_Button_style = {
     "fg": "white",
     "relief": "raised",
     "borderwidth": 5,
-    "activebackground":"white",  # Hover background color
-    "activeforeground":"black"  # Hover text color
+    "activebackground":"white",
+    "activeforeground":"black"
 }
 
 Button_style_1 = {
@@ -59,17 +58,13 @@ Button_style_4 = {
 
 #styles END ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
-
 #OS configuration ---------------------------------------------------------------------------------------------------------------------------------------
 
 current_directory = os.path.dirname(__file__)  # Making sure the file is always created in the same folder with the program
 data_file_path = os.path.join(current_directory, 'User_data.txt')
 key_file_path= os.path.join(current_directory, 'key.txt')
 chat_logs_file_path=os.path.join(current_directory, 'chat_logs.txt')
-database_json_file_path=os.path.join(current_directory, 'cn-project-f9b34-firebase-adminsdk-fbsvc-b6f503d8cd.json')
+database_json_file_path=os.path.join(current_directory, 'cn-project-f9b34-firebase-adminsdk-fbsvc-b6f503d8cd.json') #REPLACE THIS WITH THE PATH TO YOUR CREDENTAILS CERTIFICATE
 
 def remove_file(path):
    os.remove(path)
