@@ -194,6 +194,7 @@ def Update_Password(Username,new_password):
         i=i+1
 
 def Update_IP_address(Username,new_IP_address):
+     database_updator.download_from_firebase()  #first get the data from firebase,
      File_data=get_file_data_string(design.data_file_path)
      i = 0
      while (i < len(File_data)):
@@ -208,9 +209,6 @@ def Update_IP_address(Username,new_IP_address):
 
 
 def Update_Account_Data(line_number,new_data,file_data):
-      
-      database_updator.download_from_firebase()  #first get the data from firebase,
-
       file_data[line_number]=new_data
       try:
         if design.already_exists(design.data_file_path):
