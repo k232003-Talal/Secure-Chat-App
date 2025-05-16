@@ -6,6 +6,7 @@ This project is a secure, user-friendly desktop chat application built with Pyth
 
 ## Chat Implementation Details
 
+- Upon clicking on chat button, the sockets try to establish connection to the other user's Ip in the user_data.txt.
 - The chat window does not appear until the connection is established.  
 - Both users attempt to connect continuously until a connection is made.  
 - Once the connection is established, the chat window appears for both users.  
